@@ -169,7 +169,7 @@
       "name": "WebApiSkill",
       "description": "Custom Skill implemented as an Azure Function",
       "context": "/document",
-      "uri": "https://cjoakimsearchapp.azurewebsites.net/api/TopWordsSkill?code=nXcuZyImvg0Pjz0kVjjg3g9D7fPU91n0JNMF2rNu7N6Jj1Okqz7FEA==",
+      "uri": "... populate me ...",
       "httpMethod": "POST",
       "timeout": "PT30S",
       "batchSize": 100,

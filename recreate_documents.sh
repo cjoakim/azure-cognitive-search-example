@@ -16,7 +16,7 @@ python storage-client.py create_upload_list
 sleep 5
 
 echo '=========='
-python storage-client.py upload_files 999
+#python storage-client.py upload_files 999
 sleep 5
 
 echo '=========='
@@ -31,7 +31,17 @@ echo '=========='
 python search-client.py delete_index documents
 sleep 5
 
+echo '=========='
+python search-client.py delete_datasource azureblob-documents
+sleep 5
 
+echo '=========='
+echo 'Tear-down steps complete, Recreating in 30-seconds...'
+sleep 30
+
+echo '=========='
+python search-client.py create_blob_datasource documents
+sleep 20
 
 echo '=========='
 python search-client.py create_index documents documents_index_v1

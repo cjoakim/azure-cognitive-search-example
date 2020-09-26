@@ -280,6 +280,11 @@ class SearchClient(BaseClass):
             schema['name'] = name
             schema['cognitiveServices']['key'] = os.environ['AZURE_SEARCH_COGSVCS_ALLIN1_KEY']
 
+            for skill in schema['skills']:
+                t = skill['@odata.type']
+                if t == "#Microsoft.Skills.Custom.WebApiSkill":
+                    skill['uri'] = os.environ['AZURE_FUNCTION_CUSTOM_SKILL_URL']
+
         if action == 'create':
             http_method = 'post'
             url = self.urls.create_skillset()

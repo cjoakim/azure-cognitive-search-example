@@ -19,11 +19,19 @@ python search-client.py delete_index airports
 sleep 5
 
 echo '=========='
-python search-client.py create_index airports airports_index_v1
+python search-client.py delete_datasource cosmosdb-dev-airports
 sleep 5
 
 echo '=========='
+echo 'Tear-down steps complete, Recreating in 30-seconds...'
+sleep 30
+
+echo '=========='
 python search-client.py create_cosmos_datasource dev airports
+sleep 15
+
+echo '=========='
+python search-client.py create_index airports airports_index_v1
 sleep 5
 
 echo '=========='

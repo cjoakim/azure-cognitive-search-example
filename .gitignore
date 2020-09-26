@@ -15,7 +15,7 @@ man/
 # venv files - win
 Scripts/
 
-data/data/uploads_list.json
+data/uploads_list.json
 responses/
 **/tmp/
 
