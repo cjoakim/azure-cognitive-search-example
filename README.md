@@ -43,19 +43,19 @@ and resource names.
 ### Azure Cognitive Search
 
 ```
-./search.sh create
+$ ./search.sh create
 ```
 
 ### Azure Cognitive Service
 
 ```
-./cognitive.sh create
+$ ./cognitive.sh create
 ```
 
 ### Azure Storage
 
 ```
-./storage.sh create
+$ ./storage.sh create
 ```
 
 ### Azure CosmosDB
@@ -68,6 +68,7 @@ specifying a partition key field named **/pk**.
 Create a Function app with your tool-of-choice; Visual Studio, Visual Studio Code, or the
 **func** command line tools.  See https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Ccsharp%2Cbash
 
+I used the **func** command line tools; see the section below titled **Custom Skill Azure Function**.
 
 ---
 
@@ -100,43 +101,59 @@ AZURE_FUNCTION_CUSTOM_SKILL_LOCAL=http://localhost:7071/api/TopWordsSkill
 AZURE_FUNCTION_CUSTOM_SKILL_REMOTE=https://cjoakimsearchapp.azurewebsites.net/api/TopWordsSkill?code=...secret...
 ```
 
-
 ---
 
-## Links
+## Concepts
+
+- [REST API](https://docs.microsoft.com/en-us/rest/api/searchservice/)
+  - [HTTP Status Codes](https://docs.microsoft.com/en-us/rest/api/searchservice/http-status-codes)
+  - [HTTP Status Codes; Explained as Dogs](https://httpstatusdogs.com)
+  - [Python Requests Library; HTTP for Humans](https://requests.readthedocs.io/en/master/)
+- [Indexes](https://docs.microsoft.com/en-us/azure/search/search-get-started-portal)
+- [Index from Storage](https://docs.microsoft.com/en-us/azure/search/search-blob-storage-integration)
+- [Index from CosmosDB, and document "flattening"](https://docs.microsoft.com/en-us/azure/search/search-howto-index-cosmosdb)
+- [Indexers](https://docs.microsoft.com/en-us/azure/search/search-indexer-overview)
+- [Synonyms](https://docs.microsoft.com/en-us/azure/search/search-synonyms)
+- [Skillsets](https://docs.microsoft.com/en-us/azure/search/cognitive-search-defining-skillset)
+- [Skills and Document Cracking](https://docs.microsoft.com/en-us/azure/search/cognitive-search-concept-intro)
+- [Built-In Skills](https://docs.microsoft.com/en-us/azure/search/cognitive-search-predefined-skills)
+- [Custom Skills](https://docs.microsoft.com/en-us/azure/search/cognitive-search-defining-skillset#add-a-custom-skill)
+
+### Other Links
 
 - [Azure Cognitive Search Overview](https://azure.microsoft.com/en-us/services/search/)
 - [Azure Cognitive Search Documentation](https://docs.microsoft.com/en-us/azure/search/)
-- [Index from Storage](https://docs.microsoft.com/en-us/azure/search/search-blob-storage-integration)
-- [Index from CosmosDB, "flattening"](https://docs.microsoft.com/en-us/azure/search/search-howto-index-cosmosdb)
-- [REST API](https://docs.microsoft.com/en-us/rest/api/searchservice/)
-  - [HTTP Status Codes](https://docs.microsoft.com/en-us/rest/api/searchservice/http-status-codes)
-  - [Python Requests: HTTP for Humans](https://requests.readthedocs.io/en/master/)
 - [Data Types](https://docs.microsoft.com/en-us/rest/api/searchservice/supported-data-types)
 - [API Versions](https://docs.microsoft.com/en-us/rest/api/searchservice/search-service-api-versions)
-
-## Environment
-
-```
-export AZURE_SEARCH_NAME="cjoakimsearch"
-export AZURE_SEARCH_URL="https://cjoakimsearch.search.windows.net"
-export AZURE_SEARCH_ADMIN_KEY="xxx"
-export AZURE_SEARCH_QUERY_KEY="xxx"
-
-export AZURE_SEARCH_STORAGE_ACCOUNT="cjoakimsearch"
-export AZURE_SEARCH_STORAGE_KEY="xxx"
-export AZURE_SEARCH_STORAGE_CONNECTION_STRING="xxx"
-
-export AZURE_SEARCH_COGSVCS_ALLIN1_NAME="cjoakimsearch"
-export AZURE_SEARCH_COGSVCS_ALLIN1_KEY="xxx"
-export AZURE_SEARCH_COGSVCS_ALLIN1_URL="https://eastus.api.cognitive.microsoft.com/"
-
-
-```
+- [Postman HTTP Client UI](https://www.postman.com)
+- [curl HTTP Client CLI program](https://curl.haxx.se/docs/httpscripting.html)
 
 ---
 
-## Sequence 
+## Implementation and Execution
+
+This project is implemented using shell scripts, python programming, and JSON files.
+
+To create the **airports** Index, from CosmosDB JSON documents, run the following:
+
+```
+$ ./recreate_airports.sh
+```
+
+To create the **documents** Index, from Azure Storages blobs (PDFs, Images, html files), run the following:
+
+```
+$ ./recreate_documents.sh
+```
+
+See each of these scripts for the details.  But essentially 
+
+### Searching and Lookup
+
+```
+$ python search-client.py search_index documents all
+$ python search-client.py lookup_doc documents aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvMjAyMS1zdXBlci1jdWItYzEyNS1nYWxsZXJ5LTA0LTI0MDB4YXV0by5qcGc1
+```
 
 ---
 
@@ -161,7 +178,20 @@ export AZURE_SEARCH_COGSVCS_ALLIN1_URL="https://eastus.api.cognitive.microsoft.c
   "datasource",
   "skills",
   "client",
-  "program"
+  "program",
+  "built-in",
+  "custom",
+  "http",
+  "etc",
+  "python",
+  "loader",
+  "storage",
+  "example",
+  "concepts:",
+  "paas",
+  "index",
+  "indexer",
+  "synonyms"
 ]
 ```
 
@@ -190,7 +220,9 @@ export AZURE_SEARCH_COGSVCS_ALLIN1_URL="https://eastus.api.cognitive.microsoft.c
   "emission",
   "hybrid",
   "electric",
-  "vehicle"
+  "vehicle",
+  "usdot",
+  "021800"
 ]
 ```
 
@@ -203,32 +235,49 @@ export AZURE_SEARCH_COGSVCS_ALLIN1_URL="https://eastus.api.cognitive.microsoft.c
 </p>
 
 ```
-  "imageDescription": [
-    "{\"tags\":[\"person\",\"road\",\"outdoor\",\"sport\",\"street\",\"man\",\"walking\",\"holding\",\"woman\",\"people\",\"jumping\",\"young\",\"standing\",\"riding\",\"city\",\"playing\",\"player\",\"group\",\"ball\"],\"captions\":[{\"text\":\"Shalane Flanagan et al. walking down the street\",\"confidence\":0.7455881694062344}]}"
-  ],
-  "imageText": [
-    "B TATA CONSULTANCY SERVICES TATA TCS NEW FLANAGAN 2017 % WOR YORK CITY airbnb"
-  ],
-  "mergedText": " B TATA CONSULTANCY SERVICES TATA TCS NEW FLANAGAN 2017 % WOR YORK CITY airbnb \n",
-  "topwords": [
-    "tata",
-    "consultancy",
-    "services",
-    "tcs",
-    "new",
-    "flanagan",
-    "2017"
-  ]
+"imageDescription": [
+  "{\"tags\":[\"person\",\"road\",\"outdoor\",\"sport\",\"street\",\"man\",\"walking\",\"holding\",\"woman\",\"people\",\"jumping\",\"young\",\"standing\",\"riding\",\"city\",\"playing\",\"player\",\"group\",\"ball\"],\"captions\":[{\"text\":\"Shalane Flanagan et al. walking down the street\",\"confidence\":0.7455881694062344}]}"
+],
+"imageText": [
+  "B TATA CONSULTANCY SERVICES TATA TCS NEW FLANAGAN 2017 % WOR YORK CITY airbnb"
+],
+"mergedText": " B TATA CONSULTANCY SERVICES TATA TCS NEW FLANAGAN 2017 % WOR YORK CITY airbnb \n",
+"topwords": [
+  "tata",
+  "consultancy",
+  "services",
+  "tcs",
+  "new",
+  "flanagan",
+  "2017",
+  "wor",
+  "york",
+  "city",
+  "airbnb"
+]
 ```
 
 ---
 
 ## Custom Skill Azure Function
 
-- https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Ccsharp%2Cbash
-- https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-python
-- https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-azure-function-azure-cli?tabs=bash%2Cbrowser&pivots=programming-language-python
-- https://docs.microsoft.com/en-us/azure/search/cognitive-search-custom-skill-python
+Creating the Azure Function with the CLI tooling.
+
+First, create the Function App, which will contain the Function(s):
+
+```
+az functionapp create \
+  --resource-group AzureFunctionsQuickstart-rg \
+  --os-type Linux \
+  --consumption-plan-location eastus \
+  --runtime python \
+  --runtime-version 3.7 \
+  --functions-version 2 \
+  --name <APP_NAME> \
+  --storage-account <STORAGE_NAME>
+```
+
+Then use the **func** utility to generate and deploy the Azure Function to the Function App.
 
 ```
 $ func init --help
@@ -240,6 +289,8 @@ $ func new --name TopWordsSkill --template "HTTP trigger"
 
 $ ./venv.sh    (with an empty requirements.in file)
 
+  ... edit the generated TopWordsSkill/__init__.py file, which implements the Function ...
+
 $ func start
 Found Python version 3.8.5 (python3).
 Azure Functions Core Tools (3.0.2912 Commit hash: bfcbbe48ed6fdacdf9b309261ecc8093df3b83f2)
@@ -250,39 +301,19 @@ Now listening on: http://0.0.0.0:7071
 Application started. Press Ctrl+C to shut down.
 
 Functions:
-
 	TopWordsSkill: [GET,POST] http://localhost:7071/api/TopWordsSkill
 ```
 
-```
-az functionapp create --resource-group AzureFunctionsQuickstart-rg --os-type Linux --consumption-plan-location westeurope --runtime python --runtime-version 3.7 --functions-version 2 --name <APP_NAME> --storage-account <STORAGE_NAME>
-``
-
-## Issues 
+Invoke the HTTP Function, running locally, from another Terminal.
 
 ```
-
-Field 'content' contains a term that is too large to process. The max length for UTF-8 encoded terms is 32766 bytes. The most likely cause of this error is that filtering, sorting, and/or faceting are enabled on this field, which causes the entire field value to be indexed as a single term. Please avoid the use of these options for large fields.
-
-https://stackoverflow.com/questions/38311911/content-too-large-when-indexing-blob-content-for-azure-search
-" If the content field in your search index is marked as filterable, facetable or sortable then you'll hit this limit (regardless of whether the field is marked as searchable or not)."
-
-    {
-      "name": "content",
-      "type": "Edm.String",
-      "searchable": "true",
-      "filterable": "false",  <-- changed to false
-      "sortable": "false",    <-- changed to false
-      "facetable": "false"    <-- changed to false
-    },
+$ python search-client.py invoke_local_function pyf-onedrop.png
 ```
 
-```
-Field 'mergedText' contains a term that is too large to process. The max length for UTF-8 encoded terms is 32766 bytes. The most likely cause of this error is that filtering, sorting, and/or faceting are enabled on this field, which causes the entire field value to be indexed as a single term. Please avoid the use of these options for large fields.
-```
-
+After you're satisfied with how the Function runs locally, deploy it to Azure:
 
 ```
-SELECT c.id, c.pk, c.location.type FROM c
-SELECT c.id, c.pk, c.location.type, c.location.coordinates[0] as longitude, , c.location.coordinates[1] as latitude FROM c
+$ func azure functionapp publish $app_name
+  - or -
+$ ./publish.sh
 ```
