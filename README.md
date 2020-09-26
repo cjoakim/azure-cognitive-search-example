@@ -146,7 +146,10 @@ To create the **documents** Index, from Azure Storages blobs (PDFs, Images, html
 $ ./recreate_documents.sh
 ```
 
-See each of these scripts for the details.  But essentially 
+**See each of these scripts for the details.  But essentially it creates a datasource, an index, and and indexer
+for each index after uploading the underlying documents to Azure Storage or Azure CosmosDB.  All of these
+actions are done in code with Python, and interact with the Azure Search Service via the REST API.**
+
 
 ### Searching and Lookup
 
@@ -157,9 +160,38 @@ $ python search-client.py lookup_doc documents aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb
 
 ---
 
-## Built-In Skills
+## Skillset
+
+An optional **Skillset**, containing **Skills**, can be used in a **pipeline** by the Indexer to
+augment the raw text extracted from the documents.  Skills can be either **built-in** or **custom**.
+
+The Skillset in this project uses the following Skills in the pipeline; see file schemas/skillset_v1.json.
+This Skillset pipeline greatly augments the raw extracted text, and transforms a simple **Search App**
+into an AI-driven **Cognitive Search App**.
+
+For example, PDF and other documents are **cracked** and their embedded text and images are further
+analyzed for **Entity Recognition, Sentiment, Key Phrases, and Image Analysis**.
+
+The implementations of **WebApiSkills** are up to you and are only limited by your creativity.
+In this app, the WebApiSkill invokes the Azure Function to identify the top n-number of words
+in the combined mergedText of the document (i.e. - document and image text). 
+
+```
+"@odata.type": "#Microsoft.Skills.Text.EntityRecognitionSkill",
+"@odata.type": "#Microsoft.Skills.Text.SentimentSkill",
+"@odata.type": "#Microsoft.Skills.Text.KeyPhraseExtractionSkill",
+"@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
+"@odata.type": "#Microsoft.Skills.Text.MergeSkill",
+"@odata.type": "#Microsoft.Skills.Vision.ImageAnalysisSkill",
+"@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",            <-- Custom Skill implemented as an Azure Function
+"@odata.type": "#Microsoft.Azure.Search.CognitiveServicesByKey",
+```
 
 ### OCR examples
+
+The [OCR](https://docs.microsoft.com/en-us/azure/search/cognitive-search-skill-ocr) built-in Skill is 
+used to **crack** documents to extract their embedded text, as well as leveraging AI to recognize
+the contents of the image.
 
 #### Of the above diagram
 
@@ -296,7 +328,6 @@ Found Python version 3.8.5 (python3).
 Azure Functions Core Tools (3.0.2912 Commit hash: bfcbbe48ed6fdacdf9b309261ecc8093df3b83f2)
 Function Runtime Version: 3.0.14287.0
 Hosting environment: Development
-Content root path: /Users/cjoakim/github/azure-search-beta/FunctionApp
 Now listening on: http://0.0.0.0:7071
 Application started. Press Ctrl+C to shut down.
 
