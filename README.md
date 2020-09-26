@@ -68,6 +68,39 @@ specifying a partition key field named **/pk**.
 Create a Function app with your tool-of-choice; Visual Studio, Visual Studio Code, or the
 **func** command line tools.  See https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Ccsharp%2Cbash
 
+
+---
+
+## Environment Variables
+
+Using environment variables is a "best practice" for handling configuration values on your
+workstation.  Using these enables you to eliminate "hard coded" configuration values and
+secrets.
+
+This project uses the following environment variables; some example values are shown.
+These values can be obtained from Azure Portal once your above resources have been created;
+see the keys section of the UI for each service.
+
+Please use your own name and not cjoakim for your Azure Services!
+
+```
+AZURE_SUBSCRIPTION_ID= ... your Azure Subscription Id ...
+AZURE_COSMOSDB_SQLDB_ACCT=cjoakimcosmossql
+AZURE_COSMOSDB_SQLDB_KEY= ... secret ...
+AZURE_COSMOSDB_SQLDB_URI=https://cjoakimcosmossql.documents.azure.com:443/
+AZURE_SEARCH_STORAGE_ACCOUNT=cjoakimsearch
+AZURE_SEARCH_STORAGE_KEY= ... secret ...
+AZURE_SEARCH_STORAGE_CONNECTION_STRING= ... secret ...
+AZURE_SEARCH_NAME=cjoakimsearch
+AZURE_SEARCH_URL=https://cjoakimsearch.search.windows.net
+AZURE_SEARCH_ADMIN_KEY= ... secret ...
+AZURE_SEARCH_QUERY_KEY= ... secret ...
+AZURE_SEARCH_COGSVCS_ALLIN1_KEY= ... secret ...
+AZURE_FUNCTION_CUSTOM_SKILL_LOCAL=http://localhost:7071/api/TopWordsSkill
+AZURE_FUNCTION_CUSTOM_SKILL_REMOTE=https://cjoakimsearchapp.azurewebsites.net/api/TopWordsSkill?code=...secret...
+```
+
+
 ---
 
 ## Links
