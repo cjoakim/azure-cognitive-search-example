@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Delete and recreate the documents index, and related objects, in Azure Cognitive Search.
+# The datasource for this index is Azure Storage.
 # Chris Joakim, Microsoft, 2020/09/26
 
 source bin/activate

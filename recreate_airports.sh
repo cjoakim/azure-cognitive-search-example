@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Delete and recreate the airports index, and related objects, in Azure Cognitive Search.
+# The datasource for this index is Azure CosmosDB.
 # Chris Joakim, Microsoft, 2020/09/26
 
 source bin/activate

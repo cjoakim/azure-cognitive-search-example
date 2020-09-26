@@ -24,15 +24,15 @@
 ```
 export AZURE_SEARCH_NAME="cjoakimsearch"
 export AZURE_SEARCH_URL="https://cjoakimsearch.search.windows.net"
-export AZURE_SEARCH_ADMIN_KEY="97C9BBCBEE590C69749EDA4737739574"
-export AZURE_SEARCH_QUERY_KEY="C73E9657B9BDFF2C82A49CE4887610D3"
+export AZURE_SEARCH_ADMIN_KEY="xxx"
+export AZURE_SEARCH_QUERY_KEY="xxx"
 
 export AZURE_SEARCH_STORAGE_ACCOUNT="cjoakimsearch"
-export AZURE_SEARCH_STORAGE_KEY="f3kFNHNuP6GNqgUVxe087RpQCydUdikR6W4QdptGtn4EAnAij+bcQ066PTXf5COhnUW7sZ4mtcXYyylpHq/2aA=="
-export AZURE_SEARCH_STORAGE_CONNECTION_STRING="DefaultEndpointsProtocol=https;AccountName=cjoakimsearch;AccountKey=f3kFNHNuP6GNqgUVxe087RpQCydUdikR6W4QdptGtn4EAnAij+bcQ066PTXf5COhnUW7sZ4mtcXYyylpHq/2aA==;EndpointSuffix=core.windows.net"
+export AZURE_SEARCH_STORAGE_KEY="xxx"
+export AZURE_SEARCH_STORAGE_CONNECTION_STRING="xxx"
 
 export AZURE_SEARCH_COGSVCS_ALLIN1_NAME="cjoakimsearch"
-export AZURE_SEARCH_COGSVCS_ALLIN1_KEY="ff7dfbf328d7486b9f2b0ff0758b7b0b"
+export AZURE_SEARCH_COGSVCS_ALLIN1_KEY="xxx"
 export AZURE_SEARCH_COGSVCS_ALLIN1_URL="https://eastus.api.cognitive.microsoft.com/"
 ```
 
