@@ -34,28 +34,13 @@ export AZURE_SEARCH_STORAGE_CONNECTION_STRING="xxx"
 export AZURE_SEARCH_COGSVCS_ALLIN1_NAME="cjoakimsearch"
 export AZURE_SEARCH_COGSVCS_ALLIN1_KEY="xxx"
 export AZURE_SEARCH_COGSVCS_ALLIN1_URL="https://eastus.api.cognitive.microsoft.com/"
+
+
 ```
 
 ---
 
 ## Sequence 
-
-```
-$ python search-client.py create_blob_datasource books       (creates the datasource 'azureblob-books')
-$ python search-client.py list_datasources
-$ python search-client.py get_datasource azureblob-books
-
-$ python search-client.py create_index books books_index_v1  (creates the 'books' index)
-$ python search-client.py list_indexes
-$ python search-client.py get_index books
-
-$ python search-client.py create_indexer books books_indexer_v1
-$ python search-client.py list_indexers
-$ python search-client.py get_indexer books
-$ python search-client.py reset_indexer books
-$ python search-client.py run_indexer books
-$ python search-client.py get_indexer_status books
-```
 
 ---
 
