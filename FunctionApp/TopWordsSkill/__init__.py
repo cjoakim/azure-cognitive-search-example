@@ -6,12 +6,40 @@ import string
 
 from collections import Counter
 
+# This Python script is the implementation of the Azure Function for the Custom Skill
+# referenced in the following Skillset schema.  The 'uri' in the Skillset schema should be
+# populated with the URL of the deployed Azure Function.  This Function will be invoked with
+# the mergedText for each indexed document, and will return the top words within the merged text.
+# Chris Joakim, Microsoft, 2020/09/26
+
+# {
+#     "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+#     "name": "WebApiSkill",
+#     "description": "Custom Skill implemented as an Azure Function",
+#     "context": "/document",
+#     "uri": "... populate me ...",
+#     "httpMethod": "POST",
+#     "timeout": "PT30S",
+#     "batchSize": 100,
+#     "degreeOfParallelism": null,
+#     "inputs": [
+#         {
+#             "name": "text",
+#             "source": "/document/mergedText"
+#         }
+#     ],
+#     "outputs": [
+#         {
+#             "name": "text",
+#             "targetName": "topwords"
+#         }
+#     ],
+#     "httpHeaders": {}
+# }
+
 # TODO - enhance this list of stopwords
 stopwords = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before", "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
-# $ func azure functionapp publish cjoakimsearchapp
-# Deployment successful.
-# Remote build succeeded!
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     try:
