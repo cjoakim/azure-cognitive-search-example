@@ -9,26 +9,66 @@
 ## Project Overview 
 
 This github project demonstrates an Azure Solution based on **Azure Cognitive Search**,
-and other Azure PaaS services, including
+and other Azure PaaS services, including:
 - **Azure Cognitive Service** - used by the Search service to invoke **built-in** skills
-- **Azure Storage**
-- **Azure CosmosDB** w/SQL API
-- **Azure Function** implemeting a **Custom Cognitive Skill**, implemented in Python 3
+- **Azure Storage** - stores documents to be indexed
+- **Azure CosmosDB** w/SQL API  - stores documents to be indexed
+- **Azure Function** implemeting a HTTP-triggered **Custom Cognitive Skill**
 
 **Python 3** is used as the sole programming language for this project, to do the following:
 - Generate Azure Cognitive Search JSON **schemas**
 - Upload a curated set of documents to Azure Storage; see the documents/ directory
-- Upsert JSON Airport documents to CosmosDB
-- Implement the Custom Cognitive Skill Azure Function
+- Upsert JSON Airport documents to CosmosDB; see file data/us_airports.json
+- Implement the Custom Cognitive Skill Azure Function; see the FunctionApp/ directory
 - Invoke the **REST API** of the **Azure Cognitive Search**, using the **requests** library
 
-Python 3 was chosen because it is cross-platform, and is commonly used by Data Scientists.
+Python 3 was chosen because it is cross-platform, practical, and is commonly used by Data Scientists.
 
 The initial implementation of this project focuses on the **bash** shell and the **linux** 
-and **macOS** operating systems, but **Windows** and **PowerShell** support will be added.
+and **macOS** operating systems, but **Windows** and **PowerShell** support will be added
+in the near future.
 
 ---
 
+## Provisioning Azure Resources
+
+In Azure, you can provision resources in one of several ways, including the **Azure Portal**,
+**ARM templates**, the **az CLI**, and others.  Some scripts using the **az CLI** are
+provided in this repo; I recommend using the Azure Portal Web UI to create the others.
+
+The az CLI scripts are located in directory **automation/az/**.
+Edit file **config.sh** in this directory per your desired Azure Region, Resource Group,
+and resource names.
+
+### Azure Cognitive Search
+
+```
+./search.sh create
+```
+
+### Azure Cognitive Service
+
+```
+./cognitive.sh create
+```
+
+### Azure Storage
+
+```
+./storage.sh create
+```
+
+### Azure CosmosDB
+
+Create a Cosmos/SQL account.  Then add a **dev** database, with an **airports** container
+specifying a partition key field named **/pk**.
+
+### Azure Function
+
+Create a Function app with your tool-of-choice; Visual Studio, Visual Studio Code, or the
+**func** command line tools.  See https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Ccsharp%2Cbash
+
+---
 
 ## Links
 
