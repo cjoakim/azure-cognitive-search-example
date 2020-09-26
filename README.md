@@ -6,6 +6,29 @@
 
 ---
 
+## Project Overview 
+
+This github project demonstrates an Azure Solution based on **Azure Cognitive Search**,
+and other Azure PaaS services, including
+- **Azure Cognitive Service** - used by the Search service to invoke **built-in** skills
+- **Azure Storage**
+- **Azure CosmosDB** w/SQL API
+- **Azure Function** implemeting a **Custom Cognitive Skill**, implemented in Python 3
+
+**Python 3** is used as the sole programming language for this project, to do the following:
+- Generate Azure Cognitive Search JSON **schemas**
+- Upload a curated set of documents to Azure Storage; see the documents/ directory
+- Upsert JSON Airport documents to CosmosDB
+- Implement the Custom Cognitive Skill Azure Function
+- Invoke the **REST API** of the **Azure Cognitive Search**, using the **requests** library
+
+Python 3 was chosen because it is cross-platform, and is commonly used by Data Scientists.
+
+The initial implementation of this project focuses on the **bash** shell and the **linux** 
+and **macOS** operating systems, but **Windows** and **PowerShell** support will be added.
+
+---
+
 
 ## Links
 
