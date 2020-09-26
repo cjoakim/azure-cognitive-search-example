@@ -410,10 +410,10 @@ class SearchClient(BaseClass):
     def azure_function_url(self, target):
         if str(target).lower() == 'local':
             # return a value like 'http://localhost:7071/api/TopWordsSkill'
-            return os.environ['AZURE_SEARCH_SKILL_URL_LOCAL']
+            return os.environ['AZURE_FUNCTION_CUSTOM_SKILL_LOCAL']
         else:
             # return a value like 'https://cjoakimsearchapp.azurewebsites.net/api/TopWordsSkill?code=nXc ... z7FEA=='
-            return os.environ['AZURE_SEARCH_SKILL_URL_REMOTE']
+            return os.environ['AZURE_FUNCTION_CUSTOM_SKILL_REMOTE']
 
     def invoke_local_function(self, sample_name):
         url = self.azure_function_url('local')
