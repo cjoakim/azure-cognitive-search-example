@@ -400,18 +400,173 @@ $ ./publish.sh
 Finally, the purpose of an **Azure Cognitive Search** solution is to have the ability
 to search the contents (i.e. - the Indices) in a fluent and accurate manner.
 
+There are two query syntaxes available for your use - the "**simple syntax** and the
+**lucene syntax**.  Examples of each are shown below.  Either syntax is much more
+complex and full-featured than SQL.  Simple syntax is the default.  Lucene syntax can be 
+specified with the "queryType": "full" parameter.
+
 ### Links
 
 - [Simple Query Syntax](https://docs.microsoft.com/en-us/azure/search/query-simple-syntax)
 - [Lucene Query Syntax](https://docs.microsoft.com/en-us/azure/search/query-lucene-syntax)
 
-Examples are shown below...
+### A Note about Command-Line Programs and Search Syntax
 
-### Searching and Lookup
+Since the format of the search parameters can get quite complex, it would be very awkward
+to pass them on the command-line to the **search-client.py** program.  Instead, the approach
+I took in this project was to implement **named queries**.  Just the name of the query is
+passed in on the command-line, and the parameters for each named query are defined in file
+**searches.json**; file shown below:
 
 ```
-$ python search-client.py search_index documents all
-$ python search-client.py lookup_doc documents aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvMjAyMS1zdXBlci1jdWItYzEyNS1nYWxsZXJ5LTA0LTI0MDB4YXV0by5qcGc1
+{
+  "all_airports": {
+    "count": true,
+    "search": "*",
+    "orderby": "pk"
+  },
+  "airports_charl": {
+    "count": true,
+    "search": "charl*",
+    "orderby": "pk",
+    "select": "name,city,pk"
+  },
+  "airports_lucene_east_cl": {
+    "count": true,
+    "search": "timezone_code:New_York~ AND pk:CL*",
+    "orderby": "pk",
+    "select": "pk,name,city,latitude,timezone_code",
+    "queryType": "full"
+  },
+  "airports_lucene_east_cl_south": {
+    "count": true,
+    "search": "timezone_code:New_York~ AND pk:CL*",
+    "filter": "latitude lt 39",
+    "orderby": "pk",
+    "select": "pk,name,city,latitude,timezone_code",
+    "queryType": "full"
+  },
+  "all_documents": {
+    "count": true,
+    "search": "*",
+    "orderby": "id"
+  },
+  "large_documents": {
+    "count": true,
+    "search": "*",
+    "filter": "size gt 10000000",
+    "select": "id,url,size,topwords",
+    "orderby": "id"
+  },
+  "top_words_python": {
+    "count": true,
+    "search": "python,searchFields=topwords",
+    "select": "id,url,size,topwords",
+    "orderby": "id"
+  },
+  "top_words_flanagan": {
+    "count": true,
+    "search": "flanagan,searchFields=topwords",
+    "select": "id,url,size,topwords",
+    "orderby": "id"
+  }
+}
 ```
 
+### Invoking the Searches
 
+The command line format is:
+```
+$ python search-client.py search_index [index-name] [named-search]
+```
+
+#### First Search 
+
+For example, let's search for Airports that are in the New York timezone, 
+have an partition key (i.e. - iata code) that begins with CL*, and are South 
+of the Mason-Dixon line.
+
+```
+$ python search-client.py search_index airports airports_lucene_east_cl_south
+```
+
+Notice how the paramteters for this named search are used for the HTTP POST
+to the Azure Cognitive Search URL.  This produces the following output:
+
+```
+...
+url:    https://cjoakimsearch.search.windows.net/indexes/airports/docs/search?api-version=2020-06-30
+params: {'count': True, 'search': 'timezone_code:New_York~ AND pk:CL*', 'filter': 'latitude lt 39', 'orderby': 'pk', 'select': 'pk,name,city,latitude,timezone_code', 'queryType': 'full'}
+response: <Response [200]>
+{
+  "@odata.context": "https://cjoakimsearch.search.windows.net/indexes('airports')/$metadata#docs(*)",
+  "@odata.count": 2,
+  "value": [
+    {
+      "@search.score": 1.8593993,
+      "pk": "CLT",
+      "name": "Charlotte Douglas Intl",
+      "city": "Charlotte",
+      "latitude": 35.214,
+      "timezone_code": "America/New_York"
+    },
+    {
+      "@search.score": 1.8823843,
+      "pk": "CLW",
+      "name": "Clearwater Air Park",
+      "city": "Clearwater",
+      "latitude": 27.9764722,
+      "timezone_code": "America/New_York"
+    }
+  ]
+}
+response document count: 2
+file written: tmp/airports_lucene_east_cl_south.json
+```
+
+#### Second Search 
+
+Let's search just the **topwords** field of the documents index for the word (name)
+**flanagan**.
+
+```
+$ python search-client.py search_index documents top_words_flanagan
+...
+url:    https://cjoakimsearch.search.windows.net/indexes/documents/docs/search?api-version=2020-06-30
+params: {'count': True, 'search': 'flanagan,searchFields=topwords', 'select': 'id,url,size,topwords', 'orderby': 'id'}
+response: <Response [200]>
+{
+  "@odata.context": "https://cjoakimsearch.search.windows.net/indexes('documents')/$metadata#docs(*)",
+  "@odata.count": 1,
+  "value": [
+    {
+      "@search.score": 7.8584824,
+      "id": "aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvc2ZueS5qcGc1",
+      "url": "https://cjoakimsearch.blob.core.windows.net/documents/sfny.jpg",
+      "size": 354574,
+      "topwords": [
+        "tata",
+        "consultancy",
+        "services",
+        "tcs",
+        "new",
+        "flanagan",
+        "2017",
+        "wor",
+        "york",
+        "city",
+        "airbnb"
+      ]
+    }
+  ]
+}
+response document count: 1
+file written: tmp/top_words_flanagan.json
+```
+
+The returned document is the image (shown above) of Shalane Flanagan winning the 2017 New York City Marathon.
+
+This search demonstrates that **Azure Cognitive Search** is more than a simple search engine;
+it is an ***AI-driven Cognitive*** search engine.  In the case of this jpg image document, the 
+text was first extracted from the built-in **OcrSkill**.  Then, the top extracted words were 
+identified and added to the index by our custom **WebApiSkill** (Azure Function) and made searchable.
