@@ -34,7 +34,7 @@ Usage:
     python search-client.py create_skillset skillset skillset_v1
     python search-client.py delete_skillset skillset 
     -
-    python search-client.py search_index documents all
+    python search-client.py search_index documents all_documents
     python search-client.py lookup_doc documents aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvMjAyMS1zdXBlci1jdWItYzEyNS1nYWxsZXJ5LTA0LTI0MDB4YXV0by5qcGc1
     -
     python search-client.py index_schema_diff schemas/documents_index_v1.json schemas/documents_index_v2.json
@@ -87,6 +87,7 @@ class SearchClient(BaseClass):
         self.search_admin_key = os.environ['AZURE_SEARCH_ADMIN_KEY']
         self.search_query_key = os.environ['AZURE_SEARCH_QUERY_KEY']
         self.search_api_version = 'api-version=2020-06-30'
+        self.named_searches = self.named_searches_dict()
 
         self.admin_headers = dict()
         self.admin_headers['Content-Type'] = 'application/json'
@@ -301,31 +302,35 @@ class SearchClient(BaseClass):
     def search_index(self, idx_name, search_name, additional):
         print('search_index: {} -> {} | {}'.format(idx_name, search_name, additional))
         url = self.urls.search_index(idx_name)
-        params = dict()
-        if search_name == 'all':
-            params['count'] = True
-            params['search'] = '*'
-            if idx_name == 'airports':
-                params['orderby'] = 'pk'
-            else:
-                params['orderby'] = 'id'
-        elif search_name == 'content':
-            params['count'] = True
-            #params['searchFields'] = 'id'
-            params['search'] = '' + additional
 
-        if url:
-            print('---')
-            print('url:    {}'.format(url))
-            print('params: {}'.format(params))
-            r = requests.post(url=url, headers=self.admin_headers, json=params)
-            print('response: {}'.format(r))
-            if r.status_code == 200:
-                resp_obj = json.loads(r.text)
-                print('response document count: {}'.format(resp_obj['@odata.count']))
-                #print(json.dumps(resp_obj, sort_keys=False, indent=2))
-                outfile = 'tmp/{}-search-{}.json'.format(idx_name, search_name)
-                self.write_json_file(resp_obj, outfile)
+        if search_name in self.named_searches.keys(): 
+            search_params = self.named_searches[search_name]
+            print('named_search found: {} -> {}'.format(search_name, search_params))
+        else:
+            if idx_name == 'airports':
+                search_params = self.named_searches['all_airports']
+            else:
+                search_params = self.named_searches['all_documents']
+            print('named_search not found: {}  using: {}'.format(search_name, search_params)) 
+
+        print('---')
+        print('url:    {}'.format(url))
+        print('params: {}'.format(search_params))
+        r = requests.post(url=url, headers=self.admin_headers, json=search_params)
+        print('response: {}'.format(r))
+        if r.status_code == 200:
+            resp_obj = json.loads(r.text)
+            print('response document count: {}'.format(resp_obj['@odata.count']))
+            #print(json.dumps(resp_obj, sort_keys=False, indent=2))
+            outfile = 'tmp/{}.json'.format(search_name)
+            self.write_json_file(resp_obj, outfile)
+
+    def named_searches_dict(self):
+        searches = dict()
+        searches['all_documents'] = {'count': True, 'search': '*', 'orderby': 'id'}
+        searches['all_airports'] = {'count': True, 'search': '*', 'orderby': 'pk'}
+
+        return searches
 
     def lookup_doc(self, index_name, doc_key):
         print('lookup_doc: {} {}'.format(index_name, doc_key))
