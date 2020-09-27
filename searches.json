@@ -1,0 +1,38 @@
+{
+  "all_airports": {
+    "count": true,
+    "search": "*",
+    "orderby": "pk"
+  },
+  "airports_charl": {
+    "count": true,
+    "search": "charl*",
+    "orderby": "pk",
+    "select": "name,city,pk"
+  },
+  "airports_lucene_east_cl": {
+    "count": true,
+    "search": "timezone_code:New_York~ AND pk:CL*",
+    "orderby": "pk",
+    "select": "pk,name,city,latitude,timezone_code",
+    "queryType": "full"
+  },
+  "airports_lucene_east_cl_south": {
+    "count": true,
+    "search": "timezone_code:New_York~ AND pk:CL*",
+    "filter": "latitude lt 39",
+    "orderby": "pk",
+    "select": "pk,name,city,latitude,timezone_code",
+    "queryType": "full"
+  },
+  "all_documents": {
+    "count": true,
+    "search": "*",
+    "orderby": "id"
+  },
+  "top_words_": {
+    "count": true,
+    "search": "*",
+    "orderby": "id"
+  }
+}

@@ -400,6 +400,11 @@ $ ./publish.sh
 Finally, the purpose of an **Azure Cognitive Search** solution is to have the ability
 to search the contents (i.e. - the Indices) in a fluent and accurate manner.
 
+### Links
+
+- [Simple Query Syntax](https://docs.microsoft.com/en-us/azure/search/query-simple-syntax)
+- [Lucene Query Syntax](https://docs.microsoft.com/en-us/azure/search/query-lucene-syntax)
+
 Examples are shown below...
 
 ### Searching and Lookup
@@ -409,4 +414,4 @@ $ python search-client.py search_index documents all
 $ python search-client.py lookup_doc documents aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvMjAyMS1zdXBlci1jdWItYzEyNS1nYWxsZXJ5LTA0LTI0MDB4YXV0by5qcGc1
 ```
 
-WIP
+

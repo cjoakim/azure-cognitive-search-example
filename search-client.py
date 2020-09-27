@@ -300,20 +300,20 @@ class SearchClient(BaseClass):
         self.invoke(function, http_method, url, self.admin_headers, schema)
 
     def search_index(self, idx_name, search_name, additional):
+        print('---')
         print('search_index: {} -> {} | {}'.format(idx_name, search_name, additional))
         url = self.urls.search_index(idx_name)
 
         if search_name in self.named_searches.keys(): 
             search_params = self.named_searches[search_name]
-            print('named_search found: {} -> {}'.format(search_name, search_params))
+            print('named_search found: {}  params: {}'.format(search_name, search_params))
         else:
             if idx_name == 'airports':
                 search_params = self.named_searches['all_airports']
             else:
                 search_params = self.named_searches['all_documents']
-            print('named_search not found: {}  using: {}'.format(search_name, search_params)) 
+            print('named_search not found: {}  using default params: {}'.format(search_name, search_params)) 
 
-        print('---')
         print('url:    {}'.format(url))
         print('params: {}'.format(search_params))
         r = requests.post(url=url, headers=self.admin_headers, json=search_params)
@@ -321,15 +321,21 @@ class SearchClient(BaseClass):
         if r.status_code == 200:
             resp_obj = json.loads(r.text)
             print('response document count: {}'.format(resp_obj['@odata.count']))
-            #print(json.dumps(resp_obj, sort_keys=False, indent=2))
+            print(json.dumps(resp_obj, sort_keys=False, indent=2))
             outfile = 'tmp/{}.json'.format(search_name)
             self.write_json_file(resp_obj, outfile)
 
     def named_searches_dict(self):
-        searches = dict()
-        searches['all_documents'] = {'count': True, 'search': '*', 'orderby': 'id'}
-        searches['all_airports'] = {'count': True, 'search': '*', 'orderby': 'pk'}
-
+        if False:
+            searches = dict()
+            searches['all_airports'] = {'count': True, 'search': '*', 'orderby': 'pk'}
+            searches['all_airports_charl'] = {'count': True, 'search': 'charl*', 'orderby': 'pk', 'select': 'name,city,pk'}
+            searches['all_airports_charl_lucene'] = {'count': True, 'search': 'charl*', 'orderby': 'pk', 'select': 'name,city,pk', 'queryType': 'full'}
+            searches['all_documents'] = {'count': True, 'search': '*', 'orderby': 'id'}
+            searches['top_words_'] = {'count': True, 'search': '*', 'orderby': 'id'}
+            self.write_json_file(searches, 'searches_generated.json')
+        else:
+            searches = self.load_json_file('searches.json')
         return searches
 
     def lookup_doc(self, index_name, doc_key):
