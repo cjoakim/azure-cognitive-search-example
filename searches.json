@@ -30,9 +30,23 @@
     "search": "*",
     "orderby": "id"
   },
-  "top_words_": {
+  "large_documents": {
     "count": true,
     "search": "*",
+    "filter": "size gt 10000000",
+    "select": "id,url,size,topwords",
+    "orderby": "id"
+  },
+  "top_words_python": {
+    "count": true,
+    "search": "python,searchFields=topwords",
+    "select": "id,url,size,topwords",
+    "orderby": "id"
+  },
+  "top_words_flanagan": {
+    "count": true,
+    "search": "flanagan,searchFields=topwords",
+    "select": "id,url,size,topwords",
     "orderby": "id"
   }
 }

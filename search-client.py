@@ -320,8 +320,8 @@ class SearchClient(BaseClass):
         print('response: {}'.format(r))
         if r.status_code == 200:
             resp_obj = json.loads(r.text)
-            print('response document count: {}'.format(resp_obj['@odata.count']))
             print(json.dumps(resp_obj, sort_keys=False, indent=2))
+            print('response document count: {}'.format(resp_obj['@odata.count']))
             outfile = 'tmp/{}.json'.format(search_name)
             self.write_json_file(resp_obj, outfile)
 
