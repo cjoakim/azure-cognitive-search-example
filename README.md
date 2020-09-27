@@ -16,7 +16,7 @@ and other Azure PaaS services, including:
 - **Azure Function** implemeting a HTTP-triggered **Custom Cognitive Skill**
 
 Two **Indexes** are created in this project:
-- **Airports** - US Airports in JSON format in CosmosDB.  Simple text-based indexing.
+- **Airports** - US Airports in JSON format in CosmosDB.  Simple text-based indexing, minimal dependent PaaS services.
 - **Documents** - PDF, image, and HTML files in Storage.  Advanced document-cracking, knowledge mining, and AI. 
 
 **Python 3** is used as the sole programming language for this project, to do the following:
@@ -117,8 +117,9 @@ AZURE_FUNCTION_CUSTOM_SKILL_REMOTE=https://cjoakimsearchapp.azurewebsites.net/ap
   - A search index stores searchable content, called Documents, used for full text and filtered queries
 - [Index from Storage](https://docs.microsoft.com/en-us/azure/search/search-blob-storage-integration)
 - [Index from CosmosDB, and document "flattening"](https://docs.microsoft.com/en-us/azure/search/search-howto-index-cosmosdb)
-- [Indexers]https://docs.microsoft.com/en-us/azure/search/search-indexer-overview)
-  - An indexer in is a crawler that extracts searchable data and metadata from an external Azure data source and populates an index based on field-to-field mappings
+- [Indexers](https://docs.microsoft.com/en-us/azure/search/search-indexer-overview)
+  - An indexer in is a crawler that extracts searchable data and metadata from an external Azure data source and populates an index based on field-to-field mappings.
+  - An indexer **cracks** binary documents (PDF, Word, Images, etc) to extract their text
 - [Synonyms](https://docs.microsoft.com/en-us/azure/search/search-synonyms)
   - Synonyms in search engines associate equivalent terms
 - [Skillsets](https://docs.microsoft.com/en-us/azure/search/cognitive-search-defining-skillset)
@@ -129,10 +130,21 @@ AZURE_FUNCTION_CUSTOM_SKILL_REMOTE=https://cjoakimsearchapp.azurewebsites.net/ap
 
 ### JSON Schemas
 
+#### Documentation
+
 - [Index](https://docs.microsoft.com/en-us/rest/api/searchservice/create-index)
 - [Datasource](https://docs.microsoft.com/en-us/rest/api/searchservice/create-data-source)
-- [Airports](schemas/airports_index_v1.json)
 
+#### This Project
+
+- [Datasource CosmosDB](schemas/datasource-cosmosdb-dev-airports.json)
+- [Datasource Storage](schemas/datasource-azureblob-documents.json)
+- [Airports Index](schemas/airports_index_v1.json)
+- [Airports Indexer](schemas/airports_indexer_v1.json)
+- [Documents Index](schemas/documents_index_v1.json)
+- [Documents Indexer](schemas/documents_indexer_v1.json)
+- [Documents Skillset](schemas/skillset_v1.json)
+- [Synonyms](schemas/synonym_map_v1.json)
 
 ### Other Links
 
@@ -149,29 +161,45 @@ AZURE_FUNCTION_CUSTOM_SKILL_REMOTE=https://cjoakimsearchapp.azurewebsites.net/ap
 
 This project is implemented using shell scripts, python programming, and JSON files.
 
-To create the **airports** Index, from CosmosDB JSON documents, run the following:
+First, you'll need to clone this repository and create the python virtual environment
+as shown here.
+
+```
+$ git clone https://github.com/cjoakim/azure-cognitive-search-example.git
+$ cd azure-cognitive-search-example
+$ mkdir tmp                      <-- some output files are written to the tmp/ directory
+$ ./venv.sh create               <-- activate the python virtual environment
+$ source bin/activate            <-- activate the python virtual environment
+```
+
+To create the **airports** Index run the following script.  The airports index does **not** 
+require the Azure Cognitive Service, Azure Storage, Azure Function, but it does require Azure CosmosDB.
 
 ```
 $ ./recreate_airports.sh
 ```
 
-To create the **documents** Index, from Azure Storages blobs (PDFs, Images, html files), run the following:
+To create the **documents** Index, from Azure Storages blobs (PDFs, Images, html files) run the following script.
+You'll also need to first create your Azure Function, as described below in section "Custom Skill Azure Function".
+This index does **not** use CosmosDB, but it does use the other Azure PaaS services listed above.
 
 ```
 $ ./recreate_documents.sh
 ```
 
-**See each of these scripts for the details.  But essentially it creates a datasource, an index, and and indexer
+**See each of these scripts for the details.  But essentially they create a datasource, an index, and and indexer
 for each index after uploading the underlying documents to Azure Storage or Azure CosmosDB.  All of these
 actions are done in code with Python, and interact with the Azure Search Service via the REST API.**
 
+### The Python Code
 
-### Searching and Lookup
-
-```
-$ python search-client.py search_index documents all
-$ python search-client.py lookup_doc documents aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvMjAyMS1zdXBlci1jdWItYzEyNS1nYWxsZXJ5LTA0LTI0MDB4YXV0by5qcGc1
-```
+- [base.py](base.py) - Implements the abstract BaseClass inherited by the other classes below
+- [search-client.py](search-client.py) - Implements class SearchClient and invokes the Azure Cognitive Search REST API
+- [storage-client.py](storage-client.py) - Implements class StorageClient and uploads the documents to Azure Storage
+- [cosmos.py](cosmos.py) - Implements class CosmosClient and uploads US Airport documents to CosmosDB
+- [schemas.py](schemas.py) - Used by class SearchClient to generate and load JSON Schemas from files
+- [urls.py](urls.py) - Used by class SearchClient to create the many REST API URLs from dynamic parameters
+- The tests/ directory - contains unit tests which use the **pytest** library
 
 ---
 
@@ -202,11 +230,14 @@ in the combined mergedText of the document (i.e. - document and image text).
 "@odata.type": "#Microsoft.Azure.Search.CognitiveServicesByKey",
 ```
 
-### OCR examples
+### OCR, Image Analysis, and TopWords - Sample Outputs
 
-The [OCR](https://docs.microsoft.com/en-us/azure/search/cognitive-search-skill-ocr) built-in Skill is 
-used to **crack** documents to extract their embedded text, as well as leveraging AI to recognize
-the contents of the image.
+The [OCR](https://docs.microsoft.com/en-us/azure/search/cognitive-search-skill-ocr) and 
+[Image Analysis](https://docs.microsoft.com/en-us/azure/search/cognitive-search-skill-image-analysis)
+built-in Skills are used to **crack** the indexed documents to extract their embedded text, 
+as well as leveraging AI to recognize the contents of the image.  The **TopWords Custom WebApiSkill**
+is implemented as an Azure Function
+
 
 #### Of the above diagram
 
@@ -363,3 +394,19 @@ $ func azure functionapp publish $app_name
   - or -
 $ ./publish.sh
 ```
+
+## Searching!
+
+Finally, the purpose of an **Azure Cognitive Search** solution is to have the ability
+to search the contents (i.e. - the Indices) in a fluent and accurate manner.
+
+Examples are shown below...
+
+### Searching and Lookup
+
+```
+$ python search-client.py search_index documents all
+$ python search-client.py lookup_doc documents aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvMjAyMS1zdXBlci1jdWItYzEyNS1nYWxsZXJ5LTA0LTI0MDB4YXV0by5qcGc1
+```
+
+WIP
