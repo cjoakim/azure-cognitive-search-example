@@ -15,6 +15,10 @@ and other Azure PaaS services, including:
 - **Azure CosmosDB** w/SQL API  - stores documents to be indexed
 - **Azure Function** implemeting a HTTP-triggered **Custom Cognitive Skill**
 
+Two **Indexes** are created in this project:
+- **Airports** - US Airports in JSON format in CosmosDB.  Simple text-based indexing.
+- **Documents** - PDF, image, and HTML files in Storage.  Advanced document-cracking, knowledge mining, and AI. 
+
 **Python 3** is used as the sole programming language for this project, to do the following:
 - Generate Azure Cognitive Search JSON **schemas**
 - Upload a curated set of documents to Azure Storage; see the documents/ directory
@@ -105,19 +109,30 @@ AZURE_FUNCTION_CUSTOM_SKILL_REMOTE=https://cjoakimsearchapp.azurewebsites.net/ap
 
 ## Concepts
 
-- [REST API](https://docs.microsoft.com/en-us/rest/api/searchservice/)
+- [HTTP REST API](https://docs.microsoft.com/en-us/rest/api/searchservice/)
   - [HTTP Status Codes](https://docs.microsoft.com/en-us/rest/api/searchservice/http-status-codes)
   - [HTTP Status Codes; Explained as Dogs](https://httpstatusdogs.com)
   - [Python Requests Library; HTTP for Humans](https://requests.readthedocs.io/en/master/)
-- [Indexes](https://docs.microsoft.com/en-us/azure/search/search-get-started-portal)
+- [Indexes](https://docs.microsoft.com/en-us/azure/search/search-what-is-an-index)
+  - A search index stores searchable content, called Documents, used for full text and filtered queries
 - [Index from Storage](https://docs.microsoft.com/en-us/azure/search/search-blob-storage-integration)
 - [Index from CosmosDB, and document "flattening"](https://docs.microsoft.com/en-us/azure/search/search-howto-index-cosmosdb)
-- [Indexers](https://docs.microsoft.com/en-us/azure/search/search-indexer-overview)
+- [Indexers]https://docs.microsoft.com/en-us/azure/search/search-indexer-overview)
+  - An indexer in is a crawler that extracts searchable data and metadata from an external Azure data source and populates an index based on field-to-field mappings
 - [Synonyms](https://docs.microsoft.com/en-us/azure/search/search-synonyms)
+  - Synonyms in search engines associate equivalent terms
 - [Skillsets](https://docs.microsoft.com/en-us/azure/search/cognitive-search-defining-skillset)
+  - A skillset is an optional collection of cognitive skills used for AI enrichment of the indexed documents
 - [Skills and Document Cracking](https://docs.microsoft.com/en-us/azure/search/cognitive-search-concept-intro)
 - [Built-In Skills](https://docs.microsoft.com/en-us/azure/search/cognitive-search-predefined-skills)
 - [Custom Skills](https://docs.microsoft.com/en-us/azure/search/cognitive-search-defining-skillset#add-a-custom-skill)
+
+### JSON Schemas
+
+- [Index](https://docs.microsoft.com/en-us/rest/api/searchservice/create-index)
+- [Datasource](https://docs.microsoft.com/en-us/rest/api/searchservice/create-data-source)
+- [Airports](schemas/airports_index_v1.json)
+
 
 ### Other Links
 
