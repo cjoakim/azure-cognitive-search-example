@@ -395,12 +395,14 @@ $ func azure functionapp publish $app_name
 $ ./publish.sh
 ```
 
+---
+
 ## Searching!
 
 Finally, the purpose of an **Azure Cognitive Search** solution is to have the ability
 to search the contents (i.e. - the Indices) in a fluent and accurate manner.
 
-There are two query syntaxes available for your use - the "**simple syntax** and the
+There are two query syntaxes available for your use - the **simple syntax** and the
 **lucene syntax**.  Examples of each are shown below.  Either syntax is much more
 complex and full-featured than SQL.  Simple syntax is the default.  Lucene syntax can be 
 specified with the "queryType": "full" parameter.
@@ -490,8 +492,8 @@ of the Mason-Dixon line.
 $ python search-client.py search_index airports airports_lucene_east_cl_south
 ```
 
-Notice how the paramteters for this named search are used for the HTTP POST
-to the Azure Cognitive Search URL.  This produces the following output:
+Notice how the parameters for this named search, as defined in the JSON file, are used
+for the HTTP POST to the Azure Cognitive Search URL.  This produces the following output:
 
 ```
 ...
@@ -564,7 +566,8 @@ response document count: 1
 file written: tmp/top_words_flanagan.json
 ```
 
-The returned document is the image (shown above) of Shalane Flanagan winning the 2017 New York City Marathon.
+The returned document represents the image (shown above) of Shalane Flanagan winning the 2017 New York City Marathon.
+The actual image file can then be read from Azure Storage using the returned URL.
 
 This search demonstrates that **Azure Cognitive Search** is more than a simple search engine;
 it is an ***AI-driven Cognitive*** search engine.  In the case of this jpg image document, the 
