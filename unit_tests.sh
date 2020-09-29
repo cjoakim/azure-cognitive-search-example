@@ -1,9 +1,8 @@
 #!/bin/bash
 
 # Execute the unit tests in this project with the pytest library.
-# Chris Joakim, Microsoft, 2020/09/26
+# Chris Joakim, Microsoft, 2020/09/29
 
 source bin/activate
 
-echo 'executing unit tests ...'
-pytest --ignore=lib/
+python -m pytest tests/ 
