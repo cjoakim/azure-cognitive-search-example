@@ -30,7 +30,8 @@ Python 3 was chosen because it is cross-platform, practical, and is commonly use
 
 The initial implementation of this project focuses on the **bash** shell and the **linux** 
 and **macOS** operating systems, but **Windows** and **PowerShell** support will be added
-in the near future.
+in the near future.  In the meanwhile, the bash shell scripts in this repo **do** work with 
+the Windows Subsystem for Linux (WSL); see https://docs.microsoft.com/en-us/windows/wsl/install-win10
 
 ---
 
