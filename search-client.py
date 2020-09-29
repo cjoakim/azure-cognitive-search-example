@@ -40,8 +40,8 @@ Usage:
     python search-client.py index_schema_diff schemas/documents_index_v1.json schemas/documents_index_v2.json
     python search-client.py indexer_schema_diff schemas/documents_indexer_v1.json schemas/documents_indexer_v2.json
     -
-    python search-client.py invoke_local_function pyf-onedrop.png
-    python search-client.py invoke_azure_function 97_Things_Every_Programmer_Should_Know.pdf
+    python search-client.py invoke_local_function
+    python search-client.py invoke_azure_function
     -
     python search-client.py generate_sample_index_schema_file
     python search-client.py generate_sample_blob_indexer
@@ -426,23 +426,18 @@ class SearchClient(BaseClass):
             # return a value like 'https://cjoakimsearchapp.azurewebsites.net/api/TopWordsSkill?code=nXc ... z7FEA=='
             return os.environ['AZURE_FUNCTION_CUSTOM_SKILL_REMOTE']
 
-    def invoke_local_function(self, sample_name):
+    def invoke_local_function(self):
         url = self.azure_function_url('local')
-        self.invoke_function(url, 'local', sample_name)
+        self.invoke_function(url, 'local')
     
-    def invoke_azure_function(self, sample_name):
+    def invoke_azure_function(self):
         url = self.azure_function_url('azure')
-        self.invoke_function(url, 'azure', sample_name)
+        self.invoke_function(url, 'azure')
 
-    def invoke_function(self, url, target, sample_name):
-        merged_text = self.read_sample_merged_data(sample_name)
+    def invoke_function(self, url, target):
         function = 'invoke_{}_function'.format(target)
-        post_data = dict()
-        values = list()
-        values.append({"recordId": "r1", "data": {"text": "Hello world"}})
-        values.append({"recordId": "r2", "data": {"text": merged_text}})
-        post_data['values'] = values
-        #print(json.dumps(post_data, sort_keys=False, indent=2))
+        post_data = self.load_json_file('data/sample_skill_function_post_body.json')
+        print(json.dumps(post_data, sort_keys=False, indent=2))
         r = self.invoke(function, 'post', url, self.admin_headers, post_data)
         print('response: ' + r.text)
 
@@ -606,12 +601,10 @@ if __name__ == "__main__":
             client.indexer_schema_diff(file1, file2)
 
         elif func == 'invoke_local_function':
-            sample_name = sys.argv[2]
-            client.invoke_local_function(sample_name)
+            client.invoke_local_function()
 
         elif func == 'invoke_azure_function':
-            sample_name = sys.argv[2]
-            client.invoke_azure_function(sample_name)
+            client.invoke_azure_function()
 
         elif func == 'search_index':
             index_name  = sys.argv[2]
