@@ -2,7 +2,7 @@
 
 # Bash shell script to delete or create the Python Virtual Environment.
 # Requires Python 3; version 3.7 or higher recommended.
-# Chris Joakim, Microsoft, 2020/09/26
+# Chris Joakim, Microsoft, 2020/09/29
 
 display_help() {
     echo "script options:"
@@ -76,6 +76,9 @@ then
         delete_venv
         create_venv
         date
+        echo ''
+        echo 'next; activate the virtual environment with: $ source bin/activate'
+        echo ''
     fi
 
     if [ $1 == "pip_list" ] 
