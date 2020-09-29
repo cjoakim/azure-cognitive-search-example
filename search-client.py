@@ -51,7 +51,7 @@ Usage:
 __author__  = 'Chris Joakim'
 __email__   = "chjoakim@microsoft.com,christopher.joakim@gmail.com"
 __license__ = "MIT"
-__version__ = "2020.09.26"
+__version__ = "2020.09.29"
 
 # https://docs.microsoft.com/en-us/rest/api/searchservice/
 # https://docs.microsoft.com/en-us/rest/api/searchservice/search-documents
@@ -284,7 +284,7 @@ class SearchClient(BaseClass):
             for skill in schema['skills']:
                 t = skill['@odata.type']
                 if t == "#Microsoft.Skills.Custom.WebApiSkill":
-                    skill['uri'] = os.environ['AZURE_FUNCTION_CUSTOM_SKILL_URL']
+                    skill['uri'] = self.azure_function_url('azure')
 
         if action == 'create':
             http_method = 'post'
