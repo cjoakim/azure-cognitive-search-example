@@ -69,7 +69,7 @@ Alternatively, [Azure Storage Explorer](https://azure.microsoft.com/en-us/featur
 ### Azure CosmosDB
 
 In Azure Portal create a Cosmos/SQL account.  Then add a **dev** database, with an **airports** container specifying a partition key field named **/pk**.
-400 RUs (Request Units) is more than adequate for this project.
+400 RUs (Request Units) is adequate for this project.
 
 ### Azure Function
 
