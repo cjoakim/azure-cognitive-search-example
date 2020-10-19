@@ -2,13 +2,13 @@
 
 # Delete and recreate the airports index, and related objects, in Azure Cognitive Search.
 # The datasource for this index is Azure CosmosDB.
-# Chris Joakim, Microsoft, 2020/09/26
+# Chris Joakim, Microsoft, 2020/10/19
 
 source bin/activate
 
-echo '=========='
-python cosmos.py load_airports dev airports no-duplicates
-sleep 5
+# echo '=========='
+# python cosmos.py load_airports dev airports no-duplicates
+# sleep 5
 
 echo '=========='
 python search-client.py delete_indexer airports
