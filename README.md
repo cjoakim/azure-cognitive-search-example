@@ -16,15 +16,17 @@ and other Azure PaaS services, including:
 - **Azure Function** implemeting a HTTP-triggered **Custom Cognitive Skill**
 
 Two **Indexes** are created in this project:
-- **Airports** - US Airports in JSON format in CosmosDB.  Simple text-based indexing, minimal dependent PaaS services.
-- **Documents** - PDF, image, and HTML files in Storage.  Advanced document-cracking, knowledge mining, and AI. 
+- **Airports** - US Airports in JSON format in CosmosDB.
+  - Simple text-based indexing, minimal dependent PaaS services.
+- **Documents** - PDF, image, and HTML files in Storage.
+  - Advanced document-cracking, knowledge mining, and AI. 
 
 **Python 3** is used as the sole programming language for this project, to do the following:
-- Generate Azure Cognitive Search JSON **schemas**
+- Generate **JSON schemas** which are used extensively by Azure Cognitive Search 
 - Upload a curated set of documents to Azure Storage; see the documents/ directory
 - Upsert JSON Airport documents to CosmosDB; see file data/us_airports.json
 - Implement the Custom Cognitive Skill Azure Function; see the FunctionApp/ directory
-- Invoke the **REST API** of the **Azure Cognitive Search**, using the **requests** library
+- Invoke the **REST API** of the **Azure Cognitive Search**, using the **requests** library to POST the generated schemas
 
 Python 3 was chosen because it is cross-platform, practical, and is commonly used by Data Scientists.
 
