@@ -16,10 +16,10 @@ and other Azure PaaS services, including:
 - **Azure Function** implemeting a HTTP-triggered **Custom Cognitive Skill**
 
 Two **Indexes** are created in this project:
-- **Airports** - US Airports in JSON format in CosmosDB.
-  - Simple text-based indexing, minimal dependent PaaS services.
-- **Documents** - PDF, image, and HTML files in Storage.
-  - Advanced document-cracking, knowledge mining, and AI. 
+- **Airports** - US Airports in JSON format in **CosmosDB**
+  - Simple text-based indexing, minimal dependent PaaS services
+- **Documents** - PDF, image, and HTML files in **Storage**
+  - Advanced document-cracking, knowledge mining, and AI 
 
 **Python 3** is used as the sole programming language for this project, to do the following:
 - Generate **JSON schemas** which are used extensively by Azure Cognitive Search 
@@ -39,7 +39,7 @@ the Windows Subsystem for Linux (WSL); see https://docs.microsoft.com/en-us/wind
 
 ## Provisioning Azure Resources
 
-In Azure, you can provision resources in one of several ways, including the **Azure Portal**,
+In Azure you can provision resources in one of several ways, including the **Azure Portal**,
 **ARM templates**, the **az CLI**, and others.  Some scripts using the **az CLI** are
 provided in this repo; I recommend using the Azure Portal Web UI to create the others.
 
@@ -63,16 +63,21 @@ $ ./cognitive.sh create
 
 In Azure Portal, create a Storage account of type **StorageV2 (general purpose v2)**.
 
+In this project, a SDK client will upload documents to be indexed to Azure Storage.
+Alternatively, [Azure Storage Explorer](https://azure.microsoft.com/en-us/features/storage-explorer/) can be used to upload the documents.
+
 ### Azure CosmosDB
 
 In Azure Portal create a Cosmos/SQL account.  Then add a **dev** database, with an **airports** container specifying a partition key field named **/pk**.
+1000 RUs (Request Units) is more than adequate for this project.
 
 ### Azure Function
 
 Create a Function app with your tool-of-choice; Visual Studio, Visual Studio Code, or the
 **func** command line tools.  See https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Ccsharp%2Cbash
 
-I used the **func** command line tools; see the section below titled **Custom Skill Azure Function**.
+I used the **func** command line tools; see the section below titled 
+**Custom Skill Azure Function**.
 
 ---
 
@@ -86,7 +91,7 @@ This project uses the following environment variables; some example values are s
 These values can be obtained from Azure Portal once your above resources have been created;
 see the keys section of the UI for each service.
 
-Please use your own name and not cjoakim for your Azure Services!
+Please use your own name, and not cjoakim, for your Azure Services!
 
 ```
 AZURE_SUBSCRIPTION_ID= ... your Azure Subscription Id ...
@@ -128,14 +133,19 @@ AZURE_FUNCTION_CUSTOM_SKILL_REMOTE=https://cjoakimsearchapp.azurewebsites.net/ap
 - [Built-In Skills](https://docs.microsoft.com/en-us/azure/search/cognitive-search-predefined-skills)
 - [Custom Skills](https://docs.microsoft.com/en-us/azure/search/cognitive-search-defining-skillset#add-a-custom-skill)
 
+---
+
 ### JSON Schemas
 
-#### Documentation
+**JSON schemas** are used extensively by Azure Cognitive Search to configure
+the various objects - Datasources, Indexes, Indexers, Skillsets, Synonyms.
+
+#### Documentation Links
 
 - [Index](https://docs.microsoft.com/en-us/rest/api/searchservice/create-index)
 - [Datasource](https://docs.microsoft.com/en-us/rest/api/searchservice/create-data-source)
 
-#### This Project
+#### Schemas used in this Project
 
 - [Datasource CosmosDB](schemas/datasource-cosmosdb-dev-airports.json)
 - [Datasource Storage](schemas/datasource-azureblob-documents.json)
@@ -209,26 +219,29 @@ actions are done in code with Python, and interact with the Azure Search Service
 An optional **Skillset**, containing **Skills**, can be used in a **pipeline** by the Indexer to
 augment the raw text extracted from the documents.  Skills can be either **built-in** or **custom**.
 
-The Skillset in this project uses the following Skills in the pipeline; see file schemas/skillset_v1.json.
-This Skillset pipeline greatly augments the raw extracted text, and transforms a simple **Search App**
-into an AI-driven **Cognitive Search App**.
+The Skillset in this project uses the following Skills in the pipeline;
+see file schemas/skillset_v1.json.  This Skillset pipeline greatly augments
+the raw extracted text, and transforms a simple **Search App** into an AI-driven 
+**Cognitive Search App**.
 
-For example, PDF and other documents are **cracked** and their embedded text and images are further
-analyzed for **Entity Recognition, Sentiment, Key Phrases, and Image Analysis**.
+For example, PDF and other documents are **cracked** and their embedded text and 
+images are further analyzed for **Entity Recognition, Sentiment, Key Phrases, and Image Analysis**.
 
-The implementations of **WebApiSkills** are up to you and are only limited by your creativity.
-In this app, the WebApiSkill invokes the Azure Function to identify the top n-number of words
-in the combined mergedText of the document (i.e. - document and image text). 
+The implementations of **WebApiSkills** are up to you and are only limited by your creativity.  In this app, the WebApiSkill invokes the Azure Function to identify the
+top n-number of words in the combined mergedText of the document (i.e. - document 
+and image text). 
 
 ```
-"@odata.type": "#Microsoft.Skills.Text.EntityRecognitionSkill",
-"@odata.type": "#Microsoft.Skills.Text.SentimentSkill",
-"@odata.type": "#Microsoft.Skills.Text.KeyPhraseExtractionSkill",
-"@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
-"@odata.type": "#Microsoft.Skills.Text.MergeSkill",
-"@odata.type": "#Microsoft.Skills.Vision.ImageAnalysisSkill",
-"@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",            <-- Custom Skill implemented as an Azure Function
-"@odata.type": "#Microsoft.Azure.Search.CognitiveServicesByKey",
+$ cat schemas/skillset_v1.json | grep odata
+
+      "@odata.type": "#Microsoft.Skills.Text.EntityRecognitionSkill",
+      "@odata.type": "#Microsoft.Skills.Text.SentimentSkill",
+      "@odata.type": "#Microsoft.Skills.Text.KeyPhraseExtractionSkill",
+      "@odata.type": "#Microsoft.Skills.Vision.OcrSkill",
+      "@odata.type": "#Microsoft.Skills.Text.MergeSkill",
+      "@odata.type": "#Microsoft.Skills.Vision.ImageAnalysisSkill",
+      "@odata.type": "#Microsoft.Skills.Custom.WebApiSkill",
+      "@odata.type": "#Microsoft.Azure.Search.CognitiveServicesByKey",
 ```
 
 ### OCR, Image Analysis, and TopWords - Sample Outputs
