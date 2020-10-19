@@ -6,7 +6,7 @@ in this directory.
 __author__  = 'Chris Joakim'
 __email__   = "chjoakim@microsoft.com,christopher.joakim@gmail.com"
 __license__ = "MIT"
-__version__ = "2020.09.26"
+__version__ = "2020.10.19"
 
 import json
 import os
@@ -38,8 +38,6 @@ class BaseClass:
 
     def cosmos_datasource_name_conn_str(self, dbname):
         # This method depends on these two environment variables that look like this; see Azure Portal.
-        # AZURE_COSMOSDB_SQLDB_ACCT=cjoakimcosmossql
-        # AZURE_COSMOSDB_SQLDB_KEY=8oLCV0idcWlsJVsaZkjsYGfd0NnkkI6URwEkSKgAVAPb4xyNoXBaW0owLWJwnMC2KHNnCpKc4e543kVfMi3eRg==
         acct = os.environ['AZURE_COSMOSDB_SQLDB_ACCT']
         key  = os.environ['AZURE_COSMOSDB_SQLDB_KEY']
         return 'AccountEndpoint=https://{}.documents.azure.com;AccountKey={};Database={}'.format(acct, key, dbname)

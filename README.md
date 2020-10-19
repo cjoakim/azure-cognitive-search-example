@@ -59,14 +59,11 @@ $ ./cognitive.sh create
 
 ### Azure Storage
 
-```
-$ ./storage.sh create
-```
+In Azure Portal, create a Storage account of type **StorageV2 (general purpose v2)**.
 
 ### Azure CosmosDB
 
-Create a Cosmos/SQL account.  Then add a **dev** database, with an **airports** container
-specifying a partition key field named **/pk**.
+In Azure Portal create a Cosmos/SQL account.  Then add a **dev** database, with an **airports** container specifying a partition key field named **/pk**.
 
 ### Azure Function
 
@@ -169,8 +166,9 @@ as shown here.
 $ git clone https://github.com/cjoakim/azure-cognitive-search-example.git
 $ cd azure-cognitive-search-example
 $ mkdir tmp                      <-- some output files are written to the tmp/ directory
-$ ./venv.sh create               <-- activate the python virtual environment
+$ ./venv.sh create               <-- create the python virtual environment, with "venv" standard library
 $ source bin/activate            <-- activate the python virtual environment
+$ ./pyenv.sh create              <-- alternative way to create python virtual environment, with "pyenv" program
 ```
 
 To create the **airports** Index run the following script.  The airports index does **not** 
