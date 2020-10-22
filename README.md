@@ -491,6 +491,56 @@ passed in on the command-line, and the parameters for each named query are defin
     "search": "flanagan,searchFields=topwords",
     "select": "id,url,size,topwords",
     "orderby": "id"
+  },
+  "nebraska": {
+    "count": true,
+    "search": "nebraska,searchFields=imageText",
+    "select": "id,url,size,topwords",
+    "orderby": "id"
+  },
+  "moscow": {
+    "count": true,
+    "search": "moscow,searchFields=imageText",
+    "select": "id,url,size",
+    "orderby": "id"
+  },
+  "moscow_with_text": {
+    "count": true,
+    "search": "moscow,searchFields=imageText",
+    "select": "id,url,size,topwords,mergedText",
+    "orderby": "id"
+  },
+  "pandas_as_in_bear": {
+    "count": true,
+    "search": "pandas bear giant,searchFields=imageText,mergedText",
+    "select": "id,url,size",
+    "skip": 0,
+    "top": 2,
+    "orderby": "search.score() desc"
+  },
+  "pandas_as_in_python": {
+    "count": true,
+    "search": "pandas dataframe,searchFields=imageText,mergedText",
+    "select": "id,url,size",
+    "skip": 0,
+    "top": 2,
+    "orderby": "search.score() desc"
+  },
+  "python_as_in_code": {
+    "count": true,
+    "search": "python programming code,searchFields=imageText,mergedText",
+    "select": "id,url,size",
+    "skip": 0,
+    "top": 3,
+    "orderby": "search.score() desc"
+  },
+  "python_as_in_snake": {
+    "count": true,
+    "search": "python snake,searchFields=imageText,mergedText",
+    "select": "id,url,size",
+    "skip": 0,
+    "top": 1,
+    "orderby": "search.score() desc"
   }
 }
 ```
