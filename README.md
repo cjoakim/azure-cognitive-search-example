@@ -502,7 +502,7 @@ The command line format is:
 $ python search-client.py search_index [index-name] [named-search]
 ```
 
-#### First Search 
+#### Example 1 - Airports, East Coast USA, CL*, in the South
 
 For example, let's search for Airports that are in the New York timezone, 
 have an partition key (i.e. - iata code) that begins with CL*, and are South 
@@ -546,7 +546,7 @@ response document count: 2
 file written: tmp/airports_lucene_east_cl_south.json
 ```
 
-#### Second Search 
+#### Example 2 - Documents, Flanagan in Topwords
 
 Let's search just the **topwords** field of the documents index for the word (name)
 **flanagan**.
@@ -593,3 +593,66 @@ This search demonstrates that **Azure Cognitive Search** is more than a simple s
 it is an ***AI-driven Cognitive*** search engine.  In the case of this jpg image document, the 
 text was first extracted from the built-in **OcrSkill**.  Then, the top extracted words were 
 identified and added to the index by our custom **WebApiSkill** (Azure Function) and made searchable.
+
+#### Example 3 - Documents, Moscow in imageText
+
+Let's search just the **imageText** field of the documents index for the word (name)
+**moscow**.  Hint; it's a [town in Idaho]('https://en.wikipedia.org/wiki/Moscow,_Idaho')
+
+```
+$ python search-client.py search_index documents moscow
+- or -
+$ python search-client.py search_index documents moscow_with_text
+
+url:    https://cjoakimsearch.search.windows.net/indexes/documents/docs/search?api-version=2020-06-30
+params: {'count': True, 'search': 'moscow,searchFields=imageText', 'select': 'id,url,size', 'orderby': 'id'}
+response: <Response [200]>
+{
+  "@odata.context": "https://cjoakimsearch.search.windows.net/indexes('documents')/$metadata#docs(*)",
+  "@odata.count": 1,
+  "value": [
+    {
+      "@search.score": 5.1123643,
+      "id": "aHR0cHM6Ly9jam9ha2ltc2VhcmNoLmJsb2IuY29yZS53aW5kb3dzLm5ldC9kb2N1bWVudHMvQW10cmFrLVN5c3RlbS1NYXAtMTAxOC5wZGY1",
+      "url": "https://cjoakimsearch.blob.core.windows.net/documents/Amtrak-System-Map-1018.pdf",
+      "size": 3059380
+    }
+  ]
+}
+response document count: 1
+file written: tmp/moscow.json
+```
+
+#### Example 4 - Documents, Python - Code vs Snakes
+
+```
+$ python search-client.py search_index documents python_as_in_code
+$ python search-client.py search_index documents python_as_in_snake
+```
+
+These two searches use the following parameters; see **searches.json**
+```
+  "python_as_in_code": {
+    "count": true,
+    "search": "python programming code,searchFields=imageText,mergedText",
+    "select": "id,url,size",
+    "skip": 0,
+    "top": 3,
+    "orderby": "search.score() desc"
+  },
+  "python_as_in_snake": {
+    "count": true,
+    "search": "python snake,searchFields=imageText,mergedText",
+    "select": "id,url,size",
+    "skip": 0,
+    "top": 1,
+    "orderby": "search.score() desc"
+  }
+```
+
+#### Other Examples
+
+```
+$ python search-client.py search_index documents pandas_as_in_bear
+$ python search-client.py search_index documents pandas_as_in_python
+```
