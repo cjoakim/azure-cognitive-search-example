@@ -8,7 +8,7 @@
   "targetIndexName": "documents",
   "disabled": null,
   "schedule": {
-    "interval": "PT2H",
+    "interval": "PT12H",
     "startTime": "2020-09-18T21:19:46.995Z"
   },
   "parameters": {

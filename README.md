@@ -169,7 +169,7 @@ the various objects - Datasources, Indexes, Indexers, Skillsets, Synonyms.
 
 ## Implementation and Execution
 
-This project is implemented using shell scripts, python programming, and JSON files.
+**This project is implemented using shell scripts, python programming, and JSON files.**
 
 First, you'll need to clone this repository and create the python virtual environment
 as shown here.
@@ -177,11 +177,16 @@ as shown here.
 ```
 $ git clone https://github.com/cjoakim/azure-cognitive-search-example.git
 $ cd azure-cognitive-search-example
+
 $ mkdir tmp                      <-- some output files are written to the tmp/ directory
+
 $ ./venv.sh create               <-- create the python virtual environment, with "venv" standard library
 $ source bin/activate            <-- activate the python virtual environment
+
 $ ./pyenv.sh create              <-- alternative way to create python virtual environment, with "pyenv" program
 ```
+
+### Airports Index
 
 To create the **airports** Index run the following script.  The airports index does **not** 
 require the Azure Cognitive Service, Azure Storage, Azure Function, but it does require Azure CosmosDB.
@@ -189,6 +194,7 @@ require the Azure Cognitive Service, Azure Storage, Azure Function, but it does 
 ```
 $ ./recreate_airports.sh
 ```
+### Documents Index
 
 To create the **documents** Index, from Azure Storages blobs (PDFs, Images, html files) run the following script.
 You'll also need to first create your Azure Function, as described below in section "Custom Skill Azure Function".
@@ -205,12 +211,12 @@ actions are done in code with Python, and interact with the Azure Search Service
 ### The Python Code
 
 - [base.py](base.py) - Implements the abstract BaseClass inherited by the other classes below
-- [search-client.py](search-client.py) - Implements class SearchClient and invokes the Azure Cognitive Search REST API
+- [search-client.py](search-client.py) - Implements class SearchClient and **invokes the Azure Cognitive Search REST API**
 - [storage-client.py](storage-client.py) - Implements class StorageClient and uploads the documents to Azure Storage
 - [cosmos.py](cosmos.py) - Implements class CosmosClient and uploads US Airport documents to CosmosDB
 - [schemas.py](schemas.py) - Used by class SearchClient to generate and load JSON Schemas from files
 - [urls.py](urls.py) - Used by class SearchClient to create the many REST API URLs from dynamic parameters
-- The tests/ directory - contains unit tests which use the **pytest** library
+- The tests/ directory - contains unit tests which use the **pytest** library; see unit_tests.sh
 
 ---
 
