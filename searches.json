@@ -41,31 +41,39 @@
     "count": true,
     "search": "python,searchFields=topwords",
     "select": "id,url,size,topwords",
-    "orderby": "id"
+    "orderby": "search.score() desc"
   },
   "top_words_flanagan": {
     "count": true,
     "search": "flanagan,searchFields=topwords",
     "select": "id,url,size,topwords",
-    "orderby": "id"
+    "orderby": "search.score() desc"
+  },
+  "keyphrase_adventurous_little_sloop": {
+    "count": true,
+    "search": "adventurous little sloop,searchFields=keyPhrases",
+    "select": "id,url,size,keyPhrases",
+    "skip": 0,
+    "top": 1,
+    "orderby": "search.score() desc"
   },
   "nebraska": {
     "count": true,
     "search": "nebraska,searchFields=imageText",
     "select": "id,url,size,topwords",
-    "orderby": "id"
+    "orderby": "search.score() desc"
   },
   "moscow": {
     "count": true,
     "search": "moscow,searchFields=imageText",
     "select": "id,url,size",
-    "orderby": "id"
+    "orderby": "search.score() desc"
   },
   "moscow_with_text": {
     "count": true,
     "search": "moscow,searchFields=imageText",
     "select": "id,url,size,topwords,mergedText",
-    "orderby": "id"
+    "orderby": "search.score() desc"
   },
   "pandas_as_in_bear": {
     "count": true,

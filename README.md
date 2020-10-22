@@ -492,6 +492,14 @@ passed in on the command-line, and the parameters for each named query are defin
     "select": "id,url,size,topwords",
     "orderby": "id"
   },
+  "keyphrase_adventurous_little_sloop": {
+    "count": true,
+    "search": "adventurous little sloop,searchFields=keyPhrases",
+    "select": "id,url,size,keyPhrases",
+    "skip": 0,
+    "top": 1,
+    "orderby": "search.score() desc"
+  },
   "nebraska": {
     "count": true,
     "search": "nebraska,searchFields=imageText",
@@ -549,7 +557,7 @@ passed in on the command-line, and the parameters for each named query are defin
 
 The command line format is:
 ```
-$ python search-client.py search_index [index-name] [named-search]
+$ python search-client.py search_index [index-name] [search-name]
 ```
 
 #### Example 1 - Airports, East Coast USA, CL*, in the South
@@ -705,4 +713,5 @@ These two searches use the following parameters; see **searches.json**
 ```
 $ python search-client.py search_index documents pandas_as_in_bear
 $ python search-client.py search_index documents pandas_as_in_python
+$ python search-client.py search_index documents keyphrase_adventurous_little_sloop
 ```
